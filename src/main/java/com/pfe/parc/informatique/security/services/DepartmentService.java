@@ -1,4 +1,4 @@
-package com.pfe.parc.informatique.service;
+package com.pfe.parc.informatique.security.services;
 
 import com.pfe.parc.informatique.entities.Department;
 import com.pfe.parc.informatique.repository.DepartmentRepository;

@@ -1,7 +1,7 @@
 package com.pfe.parc.informatique.controller;
 
 import com.pfe.parc.informatique.entities.Material;
-import com.pfe.parc.informatique.service.MaterialService;
+import com.pfe.parc.informatique.security.services.MaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

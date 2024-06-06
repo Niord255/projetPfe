@@ -1,7 +1,7 @@
 package com.pfe.parc.informatique.controller;
 
 import com.pfe.parc.informatique.entities.Contract;
-import com.pfe.parc.informatique.service.ContractService;
+import com.pfe.parc.informatique.security.services.ContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
