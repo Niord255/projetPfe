@@ -1,7 +1,7 @@
 package com.pfe.parc.informatique.controller;
 
 import com.pfe.parc.informatique.entities.Department;
-import com.pfe.parc.informatique.service.DepartmentService;
+import com.pfe.parc.informatique.security.services.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
