@@ -21,4 +21,6 @@ public class Department {
     public Department(EDepartment name) {
         this.name = name;
     }
+
+    public String getName() { return name.name(); }
 }
