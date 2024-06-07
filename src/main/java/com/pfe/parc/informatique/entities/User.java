@@ -54,4 +54,8 @@ public class User {
         this.email = email;
         this.password = password;
     }
+    // Add this method
+    public String getDepartmentName() {
+        return department != null ? department.getName() : null;
+    }
 }
