@@ -10,12 +10,9 @@ import java.util.Optional;
 
 @Service
 public class MaterialService {
+
     @Autowired
     private MaterialRepository materialRepository;
-
-    public Material save(Material material) {
-        return materialRepository.save(material);
-    }
 
     public List<Material> findAll() {
         return materialRepository.findAll();
@@ -23,6 +20,10 @@ public class MaterialService {
 
     public Optional<Material> findById(Long id) {
         return materialRepository.findById(id);
+    }
+
+    public Material save(Material material) {
+        return materialRepository.save(material);
     }
 
     public void deleteById(Long id) {

@@ -10,12 +10,9 @@ import java.util.Optional;
 
 @Service
 public class TicketService {
+
     @Autowired
     private TicketRepository ticketRepository;
-
-    public Ticket save(Ticket ticket) {
-        return ticketRepository.save(ticket);
-    }
 
     public List<Ticket> findAll() {
         return ticketRepository.findAll();
@@ -23,6 +20,18 @@ public class TicketService {
 
     public Optional<Ticket> findById(Long id) {
         return ticketRepository.findById(id);
+    }
+
+    public List<Ticket> findByUserId(Long userId) {
+        return ticketRepository.findByUserId(userId);
+    }
+
+    public List<Ticket> findByMaterialId(Long materialId) {
+        return ticketRepository.findByMaterialId(materialId);
+    }
+
+    public Ticket save(Ticket ticket) {
+        return ticketRepository.save(ticket);
     }
 
     public void deleteById(Long id) {
