@@ -59,6 +59,7 @@ public class WebSecurityConfig {
                         auth.requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/test/**").permitAll()
                                 .requestMatchers("/api/reports/**").authenticated()
+                                .requestMatchers("/api/materials/**").authenticated() // Ensure materials are secured
                                 .anyRequest().authenticated()
                 );
 

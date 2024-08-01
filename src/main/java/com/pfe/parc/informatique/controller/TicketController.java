@@ -1,54 +1,83 @@
 package com.pfe.parc.informatique.controller;
 
-import com.pfe.parc.informatique.entities.Status;
 import com.pfe.parc.informatique.entities.Ticket;
-import com.pfe.parc.informatique.repository.TicketRepository;
+import com.pfe.parc.informatique.entities.Material;
 import com.pfe.parc.informatique.security.services.TicketService;
+import com.pfe.parc.informatique.security.services.MaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/tickets")
-@CrossOrigin("*")
+@RequestMapping("/api/tickets")
 public class TicketController {
-    @Autowired
-    private TicketRepository ticketRepository;
+
     @Autowired
     private TicketService ticketService;
 
-    @PostMapping("/tickets")
-    public Ticket createTicket(@RequestBody Ticket ticket) {
-        ticket.setStatus(Status.PENDING);
-        ticket.setCreatedDate(new Date());
-        return ticketService.save(ticket);
-    }
+    @Autowired
+    private MaterialService materialService;
 
-    @GetMapping("/tickets")
+    @GetMapping
     public List<Ticket> getAllTickets() {
         return ticketService.findAll();
     }
 
-    @GetMapping("/tickets/{id}")
-    public Optional<Ticket> getTicketById(@PathVariable Long id) {
-        return ticketService.findById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Ticket> getTicketById(@PathVariable Long id) {
+        Optional<Ticket> ticket = ticketService.findById(id);
+        return ticket.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/tickets/{id}")
-    public Ticket updateTicket(@PathVariable Long id, @RequestBody Ticket ticketDetails) {
-        Ticket ticket = ticketService.findById(id).orElseThrow(() -> new RuntimeException("Ticket not found"));
-        ticket.setTitle(ticketDetails.getTitle());
-        ticket.setDescription(ticketDetails.getDescription());
-        ticket.setStatus(ticketDetails.getStatus());
-        ticket.setUpdatedDate(new Date());
-        return ticketService.save(ticket);
+    @GetMapping("/user/{userId}")
+    public List<Ticket> getTicketsByUserId(@PathVariable Long userId) {
+        return ticketService.findByUserId(userId);
     }
 
-    @DeleteMapping("/tickets/{id}")
-    public void deleteTicket(@PathVariable Long id) {
-        ticketService.deleteById(id);
+    @GetMapping("/material/{materialId}")
+    public List<Ticket> getTicketsByMaterialId(@PathVariable Long materialId) {
+        return ticketService.findByMaterialId(materialId);
+    }
+
+    @PostMapping
+    public ResponseEntity<Ticket> createTicket(@RequestBody Ticket ticket) {
+        Optional<Material> material = materialService.findById(ticket.getMaterial().getId());
+        if (material.isPresent()) {
+            ticket.setMaterial(material.get());
+            return ResponseEntity.ok(ticketService.save(ticket));
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Ticket> updateTicket(@PathVariable Long id, @RequestBody Ticket updatedTicket) {
+        Optional<Ticket> ticket = ticketService.findById(id);
+        if (ticket.isPresent()) {
+            Optional<Material> material = materialService.findById(updatedTicket.getMaterial().getId());
+            if (material.isPresent()) {
+                updatedTicket.setMaterial(material.get());
+                updatedTicket.setId(id);
+                return ResponseEntity.ok(ticketService.save(updatedTicket));
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTicket(@PathVariable Long id) {
+        Optional<Ticket> ticket = ticketService.findById(id);
+        if (ticket.isPresent()) {
+            ticketService.deleteById(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
