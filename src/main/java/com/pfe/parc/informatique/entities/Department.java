@@ -1,7 +1,11 @@
 package com.pfe.parc.informatique.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "departments")
@@ -9,6 +13,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "users"}) // Ignore users to prevent recursion
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

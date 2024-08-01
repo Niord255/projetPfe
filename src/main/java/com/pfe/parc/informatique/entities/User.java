@@ -1,5 +1,6 @@
 package com.pfe.parc.informatique.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -42,11 +43,13 @@ public class User {
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Ignore lazy-loaded fields
     private Set<Role> roles = new HashSet<>();
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "users"}) // Ignore lazy-loaded fields and users set
     private Department department;
 
     public User(String username, String email, String password) {
@@ -54,6 +57,7 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
     // Add this method
     public String getDepartmentName() {
         return department != null ? department.getName() : null;

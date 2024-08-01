@@ -10,21 +10,26 @@ import java.util.Optional;
 
 @Service
 public class ContractService {
+
     @Autowired
     private ContractRepository contractRepository;
 
+    // Save a new contract or update an existing one
     public Contract save(Contract contract) {
         return contractRepository.save(contract);
     }
 
+    // Find all contracts
     public List<Contract> findAll() {
         return contractRepository.findAll();
     }
 
+    // Find a contract by ID
     public Optional<Contract> findById(Long id) {
         return contractRepository.findById(id);
     }
 
+    // Delete a contract by ID
     public void deleteById(Long id) {
         contractRepository.deleteById(id);
     }

@@ -60,6 +60,8 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/test/**").permitAll()
                                 .requestMatchers("/api/reports/**").authenticated()
                                 .requestMatchers("/api/materials/**").authenticated() // Ensure materials are secured
+                                .requestMatchers("/api/tickets/**").authenticated()
+                                .requestMatchers("/api/contracts/**").authenticated()
                                 .anyRequest().authenticated()
                 );
 
