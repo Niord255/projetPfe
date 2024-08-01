@@ -1,8 +1,8 @@
 package com.pfe.parc.informatique.entities;
 
 public enum Status {
-    ACTIVE,
-    INACTIVE,
+    NEW,
+    OPEN,
     PENDING,
-    COMPLETED
+    SOLVED
 }

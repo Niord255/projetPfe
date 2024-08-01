@@ -1,9 +1,10 @@
 package com.pfe.parc.informatique.controller;
 
-import com.pfe.parc.informatique.entities.Ticket;
 import com.pfe.parc.informatique.entities.Material;
-import com.pfe.parc.informatique.security.services.TicketService;
+import com.pfe.parc.informatique.entities.Status;
+import com.pfe.parc.informatique.entities.Ticket;
 import com.pfe.parc.informatique.security.services.MaterialService;
+import com.pfe.parc.informatique.security.services.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,40 +33,25 @@ public class TicketController {
         return ticket.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/user/{userId}")
-    public List<Ticket> getTicketsByUserId(@PathVariable Long userId) {
-        return ticketService.findByUserId(userId);
-    }
-
-    @GetMapping("/material/{materialId}")
-    public List<Ticket> getTicketsByMaterialId(@PathVariable Long materialId) {
-        return ticketService.findByMaterialId(materialId);
-    }
-
     @PostMapping
     public ResponseEntity<Ticket> createTicket(@RequestBody Ticket ticket) {
         Optional<Material> material = materialService.findById(ticket.getMaterial().getId());
+
         if (material.isPresent()) {
             ticket.setMaterial(material.get());
-            return ResponseEntity.ok(ticketService.save(ticket));
+            Ticket savedTicket = ticketService.createTicket(ticket);
+            return ResponseEntity.ok(savedTicket);
         } else {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().build(); // Material not found
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Ticket> updateTicket(@PathVariable Long id, @RequestBody Ticket updatedTicket) {
-        Optional<Ticket> ticket = ticketService.findById(id);
-        if (ticket.isPresent()) {
-            Optional<Material> material = materialService.findById(updatedTicket.getMaterial().getId());
-            if (material.isPresent()) {
-                updatedTicket.setMaterial(material.get());
-                updatedTicket.setId(id);
-                return ResponseEntity.ok(ticketService.save(updatedTicket));
-            } else {
-                return ResponseEntity.badRequest().build();
-            }
-        } else {
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Ticket> updateTicketStatus(@PathVariable Long id, @RequestParam("status") Status status) {
+        try {
+            Ticket updatedTicket = ticketService.updateTicketStatus(id, status);
+            return ResponseEntity.ok(updatedTicket);
+        } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
